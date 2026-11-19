@@ -34,7 +34,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0e0c0a);
-scene.fog = new THREE.Fog(0x0e0c0a, 12, 26);
+scene.fog = new THREE.Fog(0x0e0c0a, 18, 34);
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 scene.environmentIntensity = 0.45;
@@ -59,26 +59,44 @@ scene.add(rim);
 const arena = new THREE.Group();
 scene.add(arena);
 
-// floor
-const floor = new THREE.Mesh(
-  new THREE.CylinderGeometry(4.6, 4.8, 0.18, 96),
-  new THREE.MeshStandardMaterial({ color: 0x1b1714, roughness: 0.85, metalness: 0.05 })
+// floor: real 3D Florida (US Census public-domain outline), centered on the middle of the peninsula
+const MAP = { lon0: -81.45, lat0: 27.95, S: 1.75 };
+const kx = Math.cos((MAP.lat0 * Math.PI) / 180);
+const toMap = (lon, lat) => [(lon - MAP.lon0) * kx * MAP.S, (lat - MAP.lat0) * MAP.S];
+const water = new THREE.Mesh(
+  new THREE.PlaneGeometry(80, 80),
+  new THREE.MeshStandardMaterial({ color: 0x121b20, roughness: 0.32, metalness: 0.15 })
 );
-floor.position.y = -0.09;
-floor.receiveShadow = true;
-arena.add(floor);
-const ring = new THREE.Mesh(
-  new THREE.TorusGeometry(4.62, 0.025, 8, 160),
-  new THREE.MeshStandardMaterial({ color: 0xe8b448, metalness: 1, roughness: 0.3 })
-);
-ring.rotation.x = Math.PI / 2;
-ring.position.y = 0.005;
-arena.add(ring);
-const shadowFloor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.35 }));
-shadowFloor.rotation.x = -Math.PI / 2;
-shadowFloor.position.y = -0.18;
-shadowFloor.receiveShadow = true;
-scene.add(shadowFloor);
+water.rotation.x = -Math.PI / 2;
+water.position.y = -0.2;
+water.receiveShadow = true;
+scene.add(water);
+const landMat = new THREE.MeshStandardMaterial({ color: 0x3b3329, roughness: 0.9 });
+const sideMat = new THREE.MeshStandardMaterial({ color: 0x6e5f47, roughness: 0.85 });
+const land = new THREE.Group();
+arena.add(land);
+fetch("data/florida.json").then((r) => r.json()).then((polys) => {
+  for (const poly of polys) {
+    const pts = poly.map(([lon, lat]) => new THREE.Vector2(...toMap(lon, lat)));
+    const shape = new THREE.Shape(pts);
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.12, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 2, curveSegments: 1 });
+    geo.rotateX(-Math.PI / 2);
+    const m = new THREE.Mesh(geo, [landMat, sideMat]);
+    m.position.y = -0.14;
+    m.receiveShadow = true; m.castShadow = true;
+    land.add(m);
+    const line = new THREE.LineLoop(
+      new THREE.BufferGeometry().setFromPoints(pts.map((v) => new THREE.Vector3(v.x, 0.005, -v.y))),
+      new THREE.LineBasicMaterial({ color: 0xcbb48a, transparent: true, opacity: 0.9 })
+    );
+    land.add(line);
+  }
+});
+// lat/lon grid on the water, like a chart
+const gridPts = [];
+for (let lon = -88; lon <= -79; lon += 0.5) { const [x] = toMap(lon, 0); gridPts.push(new THREE.Vector3(x, -0.19, -40), new THREE.Vector3(x, -0.19, 40)); }
+for (let lat = 23; lat <= 32; lat += 0.5) { const [, z] = toMap(0, lat); gridPts.push(new THREE.Vector3(-40, -0.19, -z), new THREE.Vector3(40, -0.19, -z)); }
+arena.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(gridPts), new THREE.LineBasicMaterial({ color: 0x223038, transparent: true, opacity: 0.7 })));
 
 function roundedRect(w, d, r) {
   const s = new THREE.Shape();
@@ -90,7 +108,7 @@ function roundedRect(w, d, r) {
   s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
   return s;
 }
-const pillarGeo = new THREE.ExtrudeGeometry(roundedRect(1.35, 1.35, 0.28), { depth: 1, bevelEnabled: false, curveSegments: 10 });
+const pillarGeo = new THREE.ExtrudeGeometry(roundedRect(1.15, 1.15, 0.24), { depth: 1, bevelEnabled: false, curveSegments: 10 });
 pillarGeo.rotateX(-Math.PI / 2);
 
 const tex = new THREE.TextureLoader();
@@ -120,14 +138,14 @@ function makePlayer(who, x) {
   const rimRing = new THREE.Mesh(new THREE.TorusGeometry(0.68, 0.05, 16, 96), new THREE.MeshStandardMaterial({ color: 0xf3ede3, metalness: 0.9, roughness: 0.25 }));
   rimRing.position.z = 0.06;
   face.add(rimRing);
-  const cap = new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRect(1.37, 1.37, 0.29), { depth: 1, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.04, bevelSegments: 4, curveSegments: 10 }).rotateX(-Math.PI / 2),
+  const cap = new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRect(1.17, 1.17, 0.25), { depth: 1, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.04, bevelSegments: 4, curveSegments: 10 }).rotateX(-Math.PI / 2),
     new THREE.MeshStandardMaterial({ color: 0xf6f2ec, roughness: 0.95 }));
   cap.castShadow = cap.receiveShadow = true;
   g.add(cap);
   arena.add(g);
   return { who, g, pillar, cap, bands, head, face, disc, discMat, h: { v: 0.001 } };
 }
-const P = { me: makePlayer("me", -1.6), him: makePlayer("him", 1.6) };
+const P = { me: makePlayer("me", -1.3), him: makePlayer("him", 1.3) };
 
 function setAvatar(who, url) {
   tex.load(url, (t) => {
@@ -137,33 +155,54 @@ function setAvatar(who, url) {
   });
 }
 
-// crowns
-const gold = new THREE.MeshStandardMaterial({ color: 0xe8b448, metalness: 1, roughness: 0.26 });
-const gems = { views: 0x2f8f5b, subs: 0xb23a3a, top: 0x2d5fa8 };
+// crowns: one continuous gold shell with real points, then rims, finials and gems
+const gold = new THREE.MeshStandardMaterial({ color: 0xe2b04a, metalness: 1, roughness: 0.22, side: THREE.DoubleSide });
+const gems = { views: 0x1f7a4d, subs: 0x9c2b34, top: 0x24529a };
+function crownShellGeo(r = 0.5, t = 0.05, hb = 0.3, hp = 0.78, points = 5, N = 300) {
+  const pos = [], idx = [];
+  const H = (th) => { const u = ((th / (Math.PI * 2)) * points) % 1; return hb + (hp - hb) * Math.pow(1 - Math.abs(2 * u - 1), 1.8); };
+  const strip = (fa, fb) => {
+    const base = pos.length / 3;
+    for (let i = 0; i <= N; i++) {
+      const th = (i / N) * Math.PI * 2;
+      const [ra, ya] = fa(th), [rb, yb] = fb(th);
+      pos.push(Math.cos(th) * ra, ya, Math.sin(th) * ra, Math.cos(th) * rb, yb, Math.sin(th) * rb);
+    }
+    for (let i = 0; i < N; i++) { const a = base + i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+  };
+  strip((th) => [r, 0], (th) => [r, H(th)]);
+  strip((th) => [r, H(th)], (th) => [r - t, H(th)]);
+  strip((th) => [r - t, H(th)], (th) => [r - t, 0]);
+  strip((th) => [r - t, 0], (th) => [r, 0]);
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx);
+  g.computeVertexNormals();
+  return g;
+}
+const shellGeo = crownShellGeo();
 function makeCrown(s) {
   const c = new THREE.Group();
-  const pts = [];
-  pts.push(new THREE.Vector2(0.5, -0.16), new THREE.Vector2(0.56, -0.12), new THREE.Vector2(0.56, 0.12), new THREE.Vector2(0.5, 0.16), new THREE.Vector2(0.47, 0.0));
-  const band = new THREE.Mesh(new THREE.LatheGeometry(pts, 72), gold);
-  band.castShadow = true;
-  c.add(band);
-  const gemMat = new THREE.MeshStandardMaterial({ color: gems[s], metalness: 0.2, roughness: 0.12 });
-  const n = 5;
-  for (let i = 0; i < n; i++) {
-    const a = (i / n) * Math.PI * 2;
-    const spike = new THREE.Mesh(new THREE.ConeGeometry(0.15, 0.5, 4), gold);
-    spike.position.set(Math.cos(a) * 0.49, 0.38, Math.sin(a) * 0.49);
-    spike.rotation.y = -a + Math.PI / 4;
-    spike.castShadow = true;
-    c.add(spike);
-    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.065, 20, 14), gold);
-    ball.position.set(Math.cos(a) * 0.49, 0.66, Math.sin(a) * 0.49);
-    c.add(ball);
-    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(0.075), gemMat);
-    gem.position.set(Math.cos(a + Math.PI / n) * 0.565, 0, Math.sin(a + Math.PI / n) * 0.565);
-    gem.scale.set(1, 1.3, 0.6);
-    gem.lookAt(0, 0, 0);
-    c.add(gem);
+  const inner = new THREE.Group();
+  inner.position.y = -0.35;
+  c.add(inner);
+  const shell = new THREE.Mesh(shellGeo, gold);
+  shell.castShadow = true;
+  inner.add(shell);
+  const rimLow = new THREE.Mesh(new THREE.TorusGeometry(0.515, 0.035, 12, 96), gold);
+  rimLow.rotation.x = Math.PI / 2; rimLow.position.y = 0.02; inner.add(rimLow);
+  const rimHigh = rimLow.clone(); rimHigh.scale.setScalar(1); rimHigh.position.y = 0.27; inner.add(rimHigh);
+  const gemMat = new THREE.MeshStandardMaterial({ color: gems[s], metalness: 0.1, roughness: 0.08 });
+  for (let k = 0; k < 5; k++) {
+    const th = ((k + 0.5) / 5) * Math.PI * 2;
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(0.05, 20, 14), gold);
+    ball.position.set(Math.cos(th) * 0.475, 0.81, Math.sin(th) * 0.475);
+    inner.add(ball);
+    const gem = new THREE.Mesh(new THREE.SphereGeometry(0.055, 6, 4), gemMat);
+    gem.scale.set(1, 1.25, 0.55);
+    gem.position.set(Math.cos(th) * 0.53, 0.145, Math.sin(th) * 0.53);
+    gem.lookAt(0, 0.145, 0);
+    inner.add(gem);
   }
   c.userData.stat = s;
   c.traverse((m) => (m.userData.stat = s));
@@ -258,8 +297,8 @@ function resize() {
   camera.aspect = w / h;
   const narrow = w / h < 0.8;
   camera.fov = narrow ? 50 : 30;
-  camBase.set(0, narrow ? 3.6 : 3.4, narrow ? 13.5 : 15);
-  look.set(0, narrow ? 2.6 : 2.35, 0);
+  camBase.set(0, narrow ? 6.5 : 6.2, narrow ? 15 : 16.5);
+  look.set(0, narrow ? 2.0 : 1.7, 0.5);
   camera.updateProjectionMatrix();
 }
 addEventListener("resize", resize);
@@ -315,8 +354,8 @@ function frame() {
   }
   for (const s of STATS) {
     const c = crowns[s];
-    c.rotation.y = t * (s === stat ? 0.9 : 0.6) + STATS.indexOf(s);
-    c.rotation.z = Math.sin(t * 1.3 + STATS.indexOf(s)) * 0.06;
+    c.rotation.y = t * 0.5 + STATS.indexOf(s) * 2.1;
+    c.rotation.x = 0.18;
   }
   const pos = snowGeo.attributes.position.array;
   const wind = Math.sin(t * 0.17) * 0.004 + 0.002;
