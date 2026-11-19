@@ -1,18 +1,36 @@
 {
- "updated": "2026-11-19T12:02:23.717Z",
+ "updated": "2026-11-19T20:42:50.675Z",
  "me": {
   "id": "UCpP09symXfvPDQUMd0pv37w",
   "name": "StolenFromStream",
   "handle": "@StolenFromStream",
   "avatarUrl": "https://yt3.googleusercontent.com/D086DqrTTy4p7szAikIWOu56SeJTi2qKSniaBgFQSCJgO657pkQfF2tWH4bIDrxsnAJNmwsWuw=s900-c-k-c0x00ffffff-no-rj",
-  "subs": 1,
-  "subsText": "1 subscriber",
-  "views": 0,
+  "subs": 2,
+  "subsText": "2 subscribers",
+  "views": 1278,
   "aboutViews": null,
-  "videoCount": 0,
-  "exactCoverage": 1,
-  "top": null,
-  "videos": []
+  "videoCount": 2,
+  "exactCoverage": 0,
+  "top": {
+   "id": "BIb4QUmITH8",
+   "title": "IShowSpeed Got Questioned By A GTA 6 NPC 💀 #shorts",
+   "views": 1160,
+   "published": "2026-11-19T10:49:31+00:00"
+  },
+  "videos": [
+   {
+    "id": "BIb4QUmITH8",
+    "title": "IShowSpeed Got Questioned By A GTA 6 NPC 💀 #shorts",
+    "views": 1160,
+    "published": "2026-11-19T10:49:31+00:00"
+   },
+   {
+    "id": "K4NzYocUyyY",
+    "title": "Speed's Funniest GTA VI Moments...😭",
+    "views": 118,
+    "published": "2026-11-19T15:51:39+00:00"
+   }
+  ]
  },
  "him": {
   "id": "UCFmrAHgWGYKTpkgKEq-9qOg",
@@ -21,21 +39,21 @@
   "avatarUrl": "https://yt3.googleusercontent.com/7AMlmugfBPkDKI_vcAwXvsRxGrk-a50nDnjb0tMGlVkTEE2tNNEQXgiRzIzqCSQe81FaMJFl=s900-c-k-c0x00ffffff-no-rj",
   "subs": 13,
   "subsText": "13 subscribers",
-  "views": 28051,
+  "views": 28312,
   "aboutViews": 22519,
-  "videoCount": 35,
+  "videoCount": 38,
   "exactCoverage": 0,
   "top": {
    "id": "YVUxiD4jEws",
    "title": "Loserfruit found infinite apples in GTA 6 🍎",
-   "views": 2497,
+   "views": 2523,
    "published": "2026-11-18T19:30:23+00:00"
   },
   "videos": [
    {
     "id": "YVUxiD4jEws",
     "title": "Loserfruit found infinite apples in GTA 6 🍎",
-    "views": 2497,
+    "views": 2523,
     "published": "2026-11-18T19:30:23+00:00"
    },
    {
@@ -47,7 +65,7 @@
    {
     "id": "6Fln1YcPRpg",
     "title": "Never talk back to a cop in GTA 6 🚔",
-    "views": 1929,
+    "views": 1940,
     "published": "2026-11-18T18:28:10+00:00"
    },
    {
@@ -113,7 +131,7 @@
    {
     "id": "kjGbcSwXfNg",
     "title": "Rockstar Made a REAL Website for a Fake Cult 💀 #gaming #rockstargames #gta5",
-    "views": 1163,
+    "views": 1165,
     "published": "2026-11-18T10:00:02+00:00"
    },
    {
@@ -141,21 +159,27 @@
     "published": "2026-11-18T01:00:17+00:00"
    },
    {
+    "id": "1ijJmuWKgzY",
+    "title": "Is GTA 7 Already Announced? Here’s What Was Actually Said #gta6 #gta5 #gaming #rockstargames #gta7",
+    "views": 594,
+    "published": "2026-11-18T13:45:02+00:00"
+   },
+   {
     "id": "-SE_pXOS3BY",
     "title": "Every GTA City Is a REAL Place 🤯 #shorts  #gtavi #gta6 #rockstargames #leonida #vicecity #gta5",
     "views": 550,
     "published": "2026-11-15T12:36:23-08:00"
    },
    {
-    "id": "1ijJmuWKgzY",
-    "title": "Is GTA 7 Already Announced? Here’s What Was Actually Said #gta6 #gta5 #gaming #rockstargames #gta7",
-    "views": 548,
-    "published": "2026-11-18T13:45:02+00:00"
+    "id": "UOmepSJCNWU",
+    "title": "Loserfruit touched the wrong tree in GTA 6 😳",
+    "views": 285,
+    "published": "2026-11-19T08:00:33+00:00"
    },
    {
     "id": "J0CHf7j5jZE",
     "title": "GTA 6 has sharks 🦈",
-    "views": 243,
+    "views": 279,
     "published": "2026-11-19T01:35:49+00:00"
    },
    {
@@ -165,16 +189,16 @@
     "published": "2026-11-15T12:16:41-08:00"
    },
    {
-    "id": "UOmepSJCNWU",
-    "title": "Loserfruit touched the wrong tree in GTA 6 😳",
-    "views": 220,
-    "published": "2026-11-19T08:00:33+00:00"
-   },
-   {
     "id": "7fRKSbxHjUw",
     "title": "GTA 6 Trailer 2 Got 475M Views… and STILL Lost a Record #gta6 #gaming #rockstargames",
-    "views": 133,
+    "views": 134,
     "published": "2026-11-18T17:00:07+00:00"
+   },
+   {
+    "id": "FmJEux3gTvA",
+    "title": "GTA 6 on Xbox Series S vs PS5 Pro 👀",
+    "views": 80,
+    "published": "2026-11-19T11:00:11+00:00"
    },
    {
     "id": "tPPUDl7JPPo",
@@ -187,12 +211,6 @@
     "title": "5 GTA 5 Story Moments That Went COMPLETELY Off the Rails #rockstargames #gta6 #gta5 #gaming",
     "views": 24,
     "published": "2026-11-17T04:15:02+00:00"
-   },
-   {
-    "id": "FmJEux3gTvA",
-    "title": "GTA 6 on Xbox Series S vs PS5 Pro 👀",
-    "views": 18,
-    "published": "2026-11-19T11:00:11+00:00"
    },
    {
     "id": "RXpkXUNWWzw",
@@ -213,10 +231,28 @@
     "published": "2026-11-15T12:54:35-08:00"
    },
    {
+    "id": "q6ejQ7bo02Q",
+    "title": "Loserfruit vs one door in GTA 6 😭",
+    "views": 6,
+    "published": "2026-11-19T17:00:20+00:00"
+   },
+   {
     "id": "l7o3JY6rRzw",
     "title": "GTA Almost Made You a COP 🚔 #shorts #gta6 #rockstargames #gta5 #leonida #gaming",
     "views": 5,
     "published": "2026-11-15T12:58:01-08:00"
+   },
+   {
+    "id": "i6KgTJcvbtk",
+    "title": "Speed had ONE complaint about GTA 6 😭",
+    "views": 4,
+    "published": "2026-11-19T05:00:25+00:00"
+   },
+   {
+    "id": "TK37NpI6a6c",
+    "title": "GTA 6 has piranhas 😳",
+    "views": 2,
+    "published": "2026-11-19T14:00:34+00:00"
    },
    {
     "id": "MpBMzdxPqCg",
@@ -231,10 +267,10 @@
     "published": "2026-11-15T12:44:26-08:00"
    },
    {
-    "id": "i6KgTJcvbtk",
-    "title": "Speed had ONE complaint about GTA 6 😭",
+    "id": "tfSF0kjEYBo",
+    "title": "How to Get Rich FAST in GTA 6 (No Glitches)",
     "views": 0,
-    "published": "2026-11-19T05:00:25+00:00"
+    "published": "2026-11-19T18:49:55+00:00"
    },
    {
     "id": "V1vRPMAGRuc",
