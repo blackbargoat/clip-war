@@ -114,6 +114,21 @@ svg.ic { width: 18px; height: 18px; flex: none; }
 .card .meta.dim { margin-top: 4px; font-size: 18px; color: var(--ink2); }
 .card .meta.dim .ic { width: 15px; height: 15px; }
 
+/* Video wall */
+.wall { position: relative; height: 120vh; overflow: hidden; perspective: 1400px; margin-top: 40px; }
+.wall-inner { position: absolute; left: 50%; top: 50%; width: 170vw; transform: translate(-50%, -50%) rotateX(18deg) rotateZ(-8deg); transform-style: preserve-3d; display: grid; gap: 16px; }
+.wall .lane { display: flex; gap: 16px; width: max-content; align-items: center; will-change: transform; }
+.wall .tile { position: relative; flex: none; border-radius: 16px; overflow: hidden; background: var(--bg2); border: 2px solid var(--c); transition: transform .3s; }
+.wall .tile:hover { transform: translateY(-8px) scale(1.04); }
+.wall .tile.me { --c: var(--me); }
+.wall .tile.him { --c: var(--him); }
+.wall .tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.wall .tile span { position: absolute; left: 8px; bottom: 8px; display: flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 99px; background: rgba(14,12,10,.82); font-family: var(--num); font-size: 15px; color: var(--c); }
+.wall .tile span svg { width: 13px; height: 13px; }
+.wall::before, .wall::after { content: ""; position: absolute; left: 0; right: 0; height: 22%; z-index: 2; pointer-events: none; }
+.wall::before { top: 0; background: linear-gradient(var(--bg), transparent); }
+.wall::after { bottom: 0; background: linear-gradient(transparent, var(--bg)); }
+
 .foot { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 40px 20px 60px; font-family: var(--num); color: var(--ink2); font-size: 18px; }
 .foot img { width: 34px; height: 34px; border-radius: 50%; display: block; }
 .foot a:first-child img { outline: 2px solid var(--me); outline-offset: 2px; }

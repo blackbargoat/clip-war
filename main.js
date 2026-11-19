@@ -1,5 +1,11 @@
 import * as THREE from "three";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { HorizontalTiltShiftShader } from "three/addons/shaders/HorizontalTiltShiftShader.js";
+import { VerticalTiltShiftShader } from "three/addons/shaders/VerticalTiltShiftShader.js";
 
 const gsap = window.gsap;
 gsap.registerPlugin(window.ScrollTrigger);
@@ -22,138 +28,128 @@ const leader = (s) => {
   return a > b ? "me" : b > a ? "him" : null;
 };
 
+
 /* ---------- three ---------- */
 const canvas = document.getElementById("gl");
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 0.95;
+renderer.toneMappingExposure = 1.0;
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0e0c0a);
-scene.fog = new THREE.Fog(0x0e0c0a, 18, 34);
+scene.fog = new THREE.Fog(0x0e0c0a, 20, 40);
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-scene.environmentIntensity = 0.45;
+scene.environmentIntensity = 0.5;
 
-const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 100);
-const camBase = new THREE.Vector3(0, 3.1, 11.5);
-const look = new THREE.Vector3(0, 2.0, 0);
+const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 120);
+const camBase = new THREE.Vector3(0, 10, 13);
+const look = new THREE.Vector3(0, 0.6, 0);
 camera.position.copy(camBase);
 
-scene.add(new THREE.HemisphereLight(0xfff1e0, 0x1a1410, 0.35));
-const sun = new THREE.DirectionalLight(0xfff0dc, 2.2);
-sun.position.set(-4, 9, 6);
+scene.add(new THREE.HemisphereLight(0xdfe6ee, 0x15110d, 0.55));
+const sun = new THREE.DirectionalLight(0xfff0dc, 2.0);
+sun.position.set(-5, 10, 4);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
-Object.assign(sun.shadow.camera, { left: -6, right: 6, top: 8, bottom: -3, near: 1, far: 30 });
-sun.shadow.radius = 6;
+Object.assign(sun.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 1, far: 30 });
+sun.shadow.radius = 5;
 scene.add(sun);
-const rim = new THREE.DirectionalLight(0xffd2a8, 1.2);
-rim.position.set(5, 4, -6);
-scene.add(rim);
 
 const arena = new THREE.Group();
 scene.add(arena);
 
-// floor: real 3D Florida (US Census public-domain outline), centered on the middle of the peninsula
-const MAP = { lon0: -81.45, lat0: 27.95, S: 1.75 };
-const kx = Math.cos((MAP.lat0 * Math.PI) / 180);
-const toMap = (lon, lat) => [(lon - MAP.lon0) * kx * MAP.S, (lat - MAP.lat0) * MAP.S];
-const water = new THREE.Mesh(
-  new THREE.PlaneGeometry(80, 80),
-  new THREE.MeshStandardMaterial({ color: 0x121b20, roughness: 0.32, metalness: 0.15 })
-);
-water.rotation.x = -Math.PI / 2;
-water.position.y = -0.2;
-water.receiveShadow = true;
-scene.add(water);
-const landMat = new THREE.MeshStandardMaterial({ color: 0x3b3329, roughness: 0.9 });
-const sideMat = new THREE.MeshStandardMaterial({ color: 0x6e5f47, roughness: 0.85 });
-const land = new THREE.Group();
-arena.add(land);
-fetch("data/florida.json").then((r) => r.json()).then((polys) => {
-  for (const poly of polys) {
-    const pts = poly.map(([lon, lat]) => new THREE.Vector2(...toMap(lon, lat)));
-    const shape = new THREE.Shape(pts);
-    const geo = new THREE.ExtrudeGeometry(shape, { depth: 0.12, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 2, curveSegments: 1 });
-    geo.rotateX(-Math.PI / 2);
-    const m = new THREE.Mesh(geo, [landMat, sideMat]);
-    m.position.y = -0.14;
-    m.receiveShadow = true; m.castShadow = true;
-    land.add(m);
-    const line = new THREE.LineLoop(
-      new THREE.BufferGeometry().setFromPoints(pts.map((v) => new THREE.Vector3(v.x, 0.005, -v.y))),
-      new THREE.LineBasicMaterial({ color: 0xcbb48a, transparent: true, opacity: 0.9 })
-    );
-    land.add(line);
-  }
-});
-// lat/lon grid on the water, like a chart
-const gridPts = [];
-for (let lon = -88; lon <= -79; lon += 0.5) { const [x] = toMap(lon, 0); gridPts.push(new THREE.Vector3(x, -0.19, -40), new THREE.Vector3(x, -0.19, 40)); }
-for (let lat = 23; lat <= 32; lat += 0.5) { const [, z] = toMap(0, lat); gridPts.push(new THREE.Vector3(-40, -0.19, -z), new THREE.Vector3(40, -0.19, -z)); }
-arena.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(gridPts), new THREE.LineBasicMaterial({ color: 0x223038, transparent: true, opacity: 0.7 })));
-
-function roundedRect(w, d, r) {
-  const s = new THREE.Shape();
-  const x = -w / 2, y = -d / 2;
-  s.moveTo(x + r, y);
-  s.lineTo(x + w - r, y); s.quadraticCurveTo(x + w, y, x + w, y + r);
-  s.lineTo(x + w, y + d - r); s.quadraticCurveTo(x + w, y + d, x + w - r, y + d);
-  s.lineTo(x + r, y + d); s.quadraticCurveTo(x, y + d, x, y + d - r);
-  s.lineTo(x, y + r); s.quadraticCurveTo(x, y, x + r, y);
-  return s;
-}
-const pillarGeo = new THREE.ExtrudeGeometry(roundedRect(1.15, 1.15, 0.24), { depth: 1, bevelEnabled: false, curveSegments: 10 });
-pillarGeo.rotateX(-Math.PI / 2);
+/* ---------- satellite diorama of Florida (NASA Blue Marble + Black Marble, public domain) ---------- */
+const BBOX = { w: -87.8, e: -79.6, s: 24.3, n: 31.2 };
+const MAP = { lon0: -81.3, lat0: 26.85, S: 1.6 };
+const kx = Math.cos((27.75 * Math.PI) / 180);
+const toXZ = (lon, lat) => [(lon - MAP.lon0) * kx * MAP.S, -(lat - MAP.lat0) * MAP.S];
+const CITY = { me: [-82.46, 27.95], him: [-80.19, 25.76] }; // Tampa, Miami
 
 const tex = new THREE.TextureLoader();
-function makePlayer(who, x) {
-  const g = new THREE.Group();
-  g.position.x = x;
-  const mat = new THREE.MeshStandardMaterial({ color: COLORS[who], roughness: 0.38, metalness: 0.0 });
-  const pillar = new THREE.Mesh(pillarGeo, mat);
-  pillar.castShadow = pillar.receiveShadow = true;
-  pillar.scale.y = 0.001;
-  g.add(pillar);
-  // ribbed bands so growth reads as "levels"
-  const bands = new THREE.Group();
-  g.add(bands);
-  const head = new THREE.Group();
-  g.add(head);
-  const face = new THREE.Group();
-  head.add(face);
-  const discMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6, metalness: 0 });
-  const disc = new THREE.Mesh(new THREE.CircleGeometry(0.62, 64), discMat);
-  disc.position.z = 0.062;
-  face.add(disc);
-  const back = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.1, 64), new THREE.MeshStandardMaterial({ color: COLORS[who], roughness: 0.35, metalness: 0.2 }));
-  back.rotation.x = Math.PI / 2;
-  back.castShadow = true;
-  face.add(back);
-  const rimRing = new THREE.Mesh(new THREE.TorusGeometry(0.68, 0.05, 16, 96), new THREE.MeshStandardMaterial({ color: 0xf3ede3, metalness: 0.9, roughness: 0.25 }));
-  rimRing.position.z = 0.06;
-  face.add(rimRing);
-  const cap = new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRect(1.17, 1.17, 0.25), { depth: 1, bevelEnabled: true, bevelThickness: 0.05, bevelSize: 0.04, bevelSegments: 4, curveSegments: 10 }).rotateX(-Math.PI / 2),
-    new THREE.MeshStandardMaterial({ color: 0xf6f2ec, roughness: 0.95 }));
-  cap.castShadow = cap.receiveShadow = true;
-  g.add(cap);
-  arena.add(g);
-  return { who, g, pillar, cap, bands, head, face, disc, discMat, h: { v: 0.001 } };
-}
-const P = { me: makePlayer("me", -1.3), him: makePlayer("him", 1.3) };
+const aniso = renderer.capabilities.getMaxAnisotropy();
+const loadTex = (u, srgb = true) => { const t = tex.load(u); if (srgb) t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = aniso; return t; };
+const dayMap = loadTex("assets/fl-day.jpg"), nightMap = loadTex("assets/fl-night.jpg");
 
-function setAvatar(who, url) {
-  tex.load(url, (t) => {
-    t.colorSpace = THREE.SRGBColorSpace;
-    P[who].discMat.map = t;
-    P[who].discMat.needsUpdate = true;
-  });
+const [x0, z0] = toXZ(BBOX.w, BBOX.n), [x1, z1] = toXZ(BBOX.e, BBOX.s);
+const mapW = x1 - x0, mapD = z1 - z0, baseH = 0.32;
+const topMat = new THREE.MeshStandardMaterial({
+  map: dayMap, color: 0x8a8a86, roughness: 0.95, metalness: 0,
+  emissive: 0xffffff, emissiveMap: nightMap, emissiveIntensity: 0.85,
+});
+const sideMat = new THREE.MeshStandardMaterial({ color: 0x17130f, roughness: 0.8 });
+const slab = new THREE.Mesh(new THREE.BoxGeometry(mapW, baseH, mapD), [sideMat, sideMat, topMat, sideMat, sideMat, sideMat]);
+slab.position.set((x0 + x1) / 2, -baseH / 2, (z0 + z1) / 2);
+slab.receiveShadow = true;
+arena.add(slab);
+// thin brass frame around the board
+const brass = new THREE.Mesh(
+  new THREE.BoxGeometry(mapW + 0.12, baseH * 0.6, mapD + 0.12),
+  new THREE.MeshStandardMaterial({ color: 0xb08a45, metalness: 1, roughness: 0.35 })
+);
+brass.position.set(slab.position.x, -baseH * 0.75, slab.position.z);
+arena.add(brass);
+// coastline trace from the Census outline, laid on top of the imagery
+fetch("data/florida.json").then((r) => r.json()).then((polys) => {
+  const m = new THREE.LineBasicMaterial({ color: 0xf3ede3, transparent: true, opacity: 0.28 });
+  for (const poly of polys) {
+    const pts = poly.map(([lon, lat]) => { const [x, z] = toXZ(lon, lat); return new THREE.Vector3(x, 0.004, z); });
+    arena.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), m));
+  }
+});
+
+/* ---------- tokens: pfp medallions on a pin over each city ---------- */
+function makeToken(who) {
+  const [x, z] = toXZ(...CITY[who]);
+  const g = new THREE.Group();
+  g.position.set(x, 0, z);
+  const col = COLORS[who];
+  const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.38, 0.06, 48), new THREE.MeshStandardMaterial({ color: col, roughness: 0.4 }));
+  pad.position.y = 0.03; pad.castShadow = true; g.add(pad);
+  const ripple = new THREE.Mesh(new THREE.RingGeometry(0.36, 0.4, 64), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.6, side: THREE.DoubleSide }));
+  ripple.rotation.x = -Math.PI / 2; ripple.position.y = 0.01; g.add(ripple);
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 1, 12), new THREE.MeshStandardMaterial({ color: 0xf3ede3, metalness: 0.8, roughness: 0.3 }));
+  pole.position.y = 0.5; pole.castShadow = true; g.add(pole);
+  const head = new THREE.Group(); g.add(head);
+  const face = new THREE.Group(); head.add(face);
+  const coin = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 0.62, 0.14, 72), new THREE.MeshStandardMaterial({ color: col, roughness: 0.35, metalness: 0.25 }));
+  coin.rotation.x = Math.PI / 2; coin.castShadow = true; face.add(coin);
+  const discMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.6 });
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(0.52, 64), discMat);
+  disc.position.z = 0.072; face.add(disc);
+  const disc2 = disc.clone(); disc2.rotation.y = Math.PI; disc2.position.z = -0.072; face.add(disc2);
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(0.565, 0.045, 16, 96), new THREE.MeshStandardMaterial({ color: 0xe2b04a, metalness: 1, roughness: 0.25 }));
+  rim.position.z = 0.0; rim.scale.z = 2.2; face.add(rim);
+  arena.add(g);
+  return { who, g, pole, head, face, ripple, discMat, h: { v: 0.8 }, spin: { v: 0 } };
 }
+const P = { me: makeToken("me"), him: makeToken("him") };
+function setAvatar(who, url) {
+  tex.load(url, (t) => { t.colorSpace = THREE.SRGBColorSpace; P[who].discMat.map = t; P[who].discMat.needsUpdate = true; });
+}
+
+/* ---------- the gap line: an arc between the two cities, dashes flow toward whoever leads ---------- */
+const A = P.me.g.position, B = P.him.g.position;
+const arcCurve = new THREE.QuadraticBezierCurve3(
+  new THREE.Vector3(A.x, 0.05, A.z), new THREE.Vector3((A.x + B.x) / 2, 1.9, (A.z + B.z) / 2), new THREE.Vector3(B.x, 0.05, B.z)
+);
+const arcMat = new THREE.ShaderMaterial({
+  transparent: true, depthWrite: false,
+  uniforms: { t: { value: 0 }, dir: { value: 0 }, cA: { value: new THREE.Color(COLORS.me) }, cB: { value: new THREE.Color(COLORS.him) } },
+  vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
+  fragmentShader: `uniform float t; uniform float dir; uniform vec3 cA; uniform vec3 cB; varying vec2 vUv;
+    void main(){ float d = fract(vUv.x * 26.0 - t * dir); float on = step(0.42, d);
+      vec3 c = mix(cA, cB, smoothstep(0.2, 0.8, vUv.x));
+      float a = on * smoothstep(0.0, 0.04, vUv.x) * smoothstep(1.0, 0.96, vUv.x);
+      if (a < 0.01) discard; gl_FragColor = vec4(c, a); }`,
+});
+const arc = new THREE.Mesh(new THREE.TubeGeometry(arcCurve, 160, 0.03, 8, false), arcMat);
+arena.add(arc);
+const arcMid = arcCurve.getPoint(0.5);
 
 // crowns: one continuous gold shell with real points, then rims, finials and gems
 const gold = new THREE.MeshStandardMaterial({ color: 0xe2b04a, metalness: 1, roughness: 0.22, side: THREE.DoubleSide });
@@ -247,15 +243,15 @@ function setSnow() {
 }
 setSnow(); setInterval(setSnow, 60000);
 
-/* ---------- layout + placement ---------- */
-const MAXH = 3.1;
+
+
+/* ---------- placement ---------- */
+const MAXH = 2.6, MINH = 0.9;
 function heights() {
-  const a = statVal("me"), b = statVal("him");
-  const m = Math.max(a, b);
-  const f = (v) => (m === 0 ? 0.35 : 0.35 + (MAXH - 0.35) * (v / m));
+  const a = statVal("me"), b = statVal("him"), m = Math.max(a, b);
+  const f = (v) => (m === 0 ? MINH : MINH + (MAXH - MINH) * (v / m));
   return { me: f(a), him: f(b) };
 }
-
 function placeCrowns(animate = true) {
   const H = heights();
   const groups = { me: [], him: [], tie: [] };
@@ -263,61 +259,73 @@ function placeCrowns(animate = true) {
   const order = (arr) => arr.sort((x, y) => (x === stat ? -1 : y === stat ? 1 : STATS.indexOf(x) - STATS.indexOf(y)));
   for (const k of ["me", "him", "tie"]) {
     const arr = order(groups[k]);
-    arr.forEach((s, i) => {
+    let side = -1;
+    arr.forEach((s) => {
       const active = s === stat;
-      const sc = active ? 0.95 : 0.5;
-      let x, y;
-      if (k === "tie") {
-        x = (i - (arr.length - 1) / 2) * 0.9;
-        y = Math.max(H.me, H.him) * 0.55 + 1.2;
-      } else {
-        const px = P[k].g.position.x;
-        const top = H[k] + 0.78 + 0.62;
-        if (active) { x = px; y = top + 0.75; }
-        else { const side = i % 2 ? 1 : -1; x = px + side * 1.05; y = top + 0.3 + (i > 2 ? 0.5 : 0); }
+      const sc = active ? 0.8 : 0.42;
+      let x, y, z;
+      if (k === "tie") { x = arcMid.x + (arr.indexOf(s) - (arr.length - 1) / 2) * 0.8; y = arcMid.y + 0.9; z = arcMid.z; }
+      else {
+        const p = P[k].g.position, top = H[k] + 0.7;
+        if (active) { x = p.x; y = top + 1.0; z = p.z; }
+        else { x = p.x + side * 0.95; y = top + 0.15; z = p.z; side = -side; }
       }
-      const tw = { x, y, z: k === "tie" ? 0.6 : 0.15, duration: animate ? 1.1 : 0, ease: "back.out(1.5)" };
-      gsap.to(crowns[s].position, tw);
+      gsap.to(crowns[s].position, { x, y, z, duration: animate ? 1.1 : 0, ease: "back.out(1.5)" });
       gsap.to(crowns[s].scale, { x: sc, y: sc, z: sc, duration: animate ? 0.8 : 0, ease: "back.out(2)" });
     });
   }
 }
-
 function applyHeights(animate = true) {
   const H = heights();
   for (const who of ["me", "him"]) {
     gsap.to(P[who].h, { v: H[who], duration: animate ? 1.4 : 0, ease: "expo.out" });
+    if (animate) gsap.fromTo(P[who].spin, { v: 0 }, { v: Math.PI * 2, duration: 1.6, ease: "power3.inOut" });
   }
+  const L = leader(stat);
+  arcMat.uniforms.dir.value = L === "me" ? 1 : L === "him" ? -1 : 0;
   placeCrowns(animate);
 }
 
+/* ---------- post: tilt-shift for the miniature look ---------- */
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const hts = new ShaderPass(HorizontalTiltShiftShader), vts = new ShaderPass(VerticalTiltShiftShader);
+hts.uniforms.r.value = vts.uniforms.r.value = 0.52;
+composer.addPass(hts); composer.addPass(vts);
+composer.addPass(new OutputPass());
+
+let narrow = false;
 function resize() {
   const w = canvas.clientWidth, h = canvas.clientHeight;
   renderer.setSize(w, h, false);
+  composer.setSize(w, h);
+  composer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  hts.uniforms.h.value = 2.2 / w;
+  vts.uniforms.v.value = 2.2 / h;
   camera.aspect = w / h;
-  const narrow = w / h < 0.8;
-  camera.fov = narrow ? 50 : 30;
-  camBase.set(0, narrow ? 6.5 : 6.2, narrow ? 15 : 16.5);
-  look.set(0, narrow ? 2.0 : 1.7, 0.5);
+  narrow = w / h < 0.8;
+  camera.fov = narrow ? 46 : 30;
+  camBase.set(0, narrow ? 12 : 9.5, narrow ? 13.5 : 12.5);
+  look.set(0, narrow ? -0.6 : 0.9, narrow ? 1.2 : 0.3);
   camera.updateProjectionMatrix();
 }
 addEventListener("resize", resize);
 resize();
 
-// drag to spin the arena, springs back
-let drag = null, spin = 0, mouse = { x: 0, y: 0 };
-canvas.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, s: spin }; canvas.setPointerCapture(e.pointerId); gsap.killTweensOf(arenaSpin); });
+// drag to spin the board, springs back; tap a crown to switch stat
+let drag = null, mouse = { x: 0, y: 0 };
+const arenaSpin = { v: 0 };
+canvas.addEventListener("pointerdown", (e) => { drag = { x: e.clientX, s: arenaSpin.v }; canvas.setPointerCapture(e.pointerId); gsap.killTweensOf(arenaSpin); });
 canvas.addEventListener("pointermove", (e) => {
   mouse.x = (e.clientX / innerWidth) * 2 - 1;
   mouse.y = (e.clientY / innerHeight) * 2 - 1;
-  if (drag) arenaSpin.v = drag.s + (e.clientX - drag.x) * 0.008;
+  if (drag) arenaSpin.v = drag.s + (e.clientX - drag.x) * 0.006;
 });
-const arenaSpin = { v: 0 };
 const ray = new THREE.Raycaster();
 canvas.addEventListener("pointerup", (e) => {
   const moved = drag && Math.abs(e.clientX - drag.x) > 6;
   drag = null;
-  gsap.to(arenaSpin, { v: 0, duration: 1.6, ease: "elastic.out(1, 0.45)" });
+  gsap.to(arenaSpin, { v: 0, duration: 1.8, ease: "elastic.out(1, 0.5)" });
   if (moved) return;
   const r = canvas.getBoundingClientRect();
   ray.setFromCamera({ x: ((e.clientX - r.left) / r.width) * 2 - 1, y: -((e.clientY - r.top) / r.height) * 2 + 1 }, camera);
@@ -335,23 +343,23 @@ function toScreen(x, y, z) {
 const clock = new THREE.Clock();
 function frame() {
   const t = clock.getElapsedTime();
-  const dt = Math.min(clock.getDelta(), 0.05);
-  spin = arenaSpin.v;
-  arena.rotation.y = spin + (reduce ? 0 : Math.sin(t * 0.25) * 0.05);
-  camera.position.x += (camBase.x + mouse.x * 0.9 - camera.position.x) * 0.04;
-  camera.position.y += (camBase.y - mouse.y * 0.4 - camera.position.y) * 0.04;
+  arena.rotation.y = arenaSpin.v + (reduce ? 0 : Math.sin(t * 0.2) * 0.04);
+  camera.position.x += (camBase.x + mouse.x * 0.8 - camera.position.x) * 0.04;
+  camera.position.y += (camBase.y - mouse.y * 0.5 - camera.position.y) * 0.04;
   camera.position.z = camBase.z;
   camera.lookAt(look);
 
   for (const who of ["me", "him"]) {
     const p = P[who], h = p.h.v;
-    p.pillar.scale.y = Math.max(h, 0.001);
-    const capH = 0.01 + 0.13 * xmasProgress();
-    p.cap.scale.y = capH; p.cap.position.y = h;
-    p.head.position.y = h + 0.78 + Math.sin(t * 1.4 + (who === "me" ? 0 : 1.7)) * 0.06;
-    p.face.lookAt(camera.position.x, camera.position.y, camera.position.z);
-    p.face.rotation.z = 0;
+    p.pole.scale.y = h; p.pole.position.y = h / 2;
+    p.head.position.y = h + 0.62 + Math.sin(t * 1.3 + (who === "me" ? 0 : 1.7)) * 0.05;
+    p.face.lookAt(camera.position.x, p.head.getWorldPosition(v3).y, camera.position.z);
+    p.face.rotateY(p.spin.v);
+    const k = (t * 0.6 + (who === "me" ? 0 : 0.5)) % 1;
+    p.ripple.scale.setScalar(1 + k * 2.2);
+    p.ripple.material.opacity = 0.55 * (1 - k);
   }
+  arcMat.uniforms.t.value = t * 0.9;
   for (const s of STATS) {
     const c = crowns[s];
     c.rotation.y = t * 0.5 + STATS.indexOf(s) * 2.1;
@@ -369,15 +377,17 @@ function frame() {
   snowGeo.attributes.position.needsUpdate = true;
 
   arena.updateMatrixWorld();
-  const a = toScreen(P.me.g.position.x, 0, 0.9), b = toScreen(P.him.g.position.x, 0, 0.9), m = toScreen(0, 0, 0.9);
-  tagMe.style.transform = `translate(${a.x}px, ${a.y + 16}px) translate(-50%, 0)`;
-  tagHim.style.transform = `translate(${b.x}px, ${b.y + 16}px) translate(-50%, 0)`;
-  gapEl.style.top = `${m.y - 60}px`;
+  const a = toScreen(P.me.g.position.x, 0, P.me.g.position.z), b = toScreen(P.him.g.position.x, 0, P.him.g.position.z);
+  const m = toScreen(arcMid.x, arcMid.y, arcMid.z);
+  tagMe.style.transform = `translate(${a.x}px, ${a.y + 30}px) translate(-50%, 0)`;
+  tagHim.style.transform = `translate(${b.x}px, ${b.y + 30}px) translate(-50%, 0)`;
+  gapEl.style.left = `${m.x}px`; gapEl.style.top = `${m.y - 54}px`;
 
-  renderer.render(scene, camera);
+  composer.render();
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
+
 
 /* ---------- DOM ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -428,6 +438,44 @@ function updateRows() {
   });
 }
 
+/* ---------- video wall: every clip from both channels, sized by views ---------- */
+let wallKey = "";
+function buildWall() {
+  const all = [...data.me.videos.map((v) => ({ ...v, who: "me" })), ...data.him.videos.map((v) => ({ ...v, who: "him" }))];
+  const key = all.map((v) => v.id + v.views).join();
+  if (key === wallKey) return;
+  wallKey = key;
+  const inner = $("#wall-inner");
+  gsap.killTweensOf(".wall .lane");
+  inner.innerHTML = "";
+  if (!all.length) return;
+  const max = Math.max(1, ...all.map((v) => v.views));
+  // shuffle-ish so both channels mix, then deal into 4 lanes
+  all.sort((a, b) => (a.id < b.id ? -1 : 1));
+  const lanes = [[], [], [], []];
+  all.forEach((v, i) => lanes[i % 4].push(v));
+  lanes.forEach((lane, li) => {
+    if (!lane.length) return;
+    const el = document.createElement("div");
+    el.className = "lane";
+    let items = lane;
+    while (items.length < 14) items = items.concat(lane);
+    const html = items.map((v) => {
+      const h = Math.round(150 + 190 * Math.sqrt(v.views / max)), w = Math.round(h * 0.6);
+      return `<a class="tile ${v.who}" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener" style="width:${w}px;height:${h}px">
+        <img loading="lazy" src="https://i.ytimg.com/vi/${v.id}/oardefault.jpg" onload="if(this.naturalWidth<=120&&!this.dataset.f){this.dataset.f=1;this.src='https://i.ytimg.com/vi/${v.id}/hqdefault.jpg'}" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${v.id}/hqdefault.jpg'" alt="">
+        <span><svg><use href="#i-eye"/></svg>${fmt(v.views)}</span></a>`;
+    }).join("");
+    el.innerHTML = html + html;
+    inner.appendChild(el);
+    requestAnimationFrame(() => {
+      const half = el.scrollWidth / 2;
+      const dirn = li % 2 ? 1 : -1;
+      gsap.fromTo(el, { x: dirn < 0 ? 0 : -half }, { x: dirn < 0 ? -half : 0, duration: reduce ? 0 : 60 + li * 12, ease: "none", repeat: -1 });
+    });
+  });
+}
+
 function updateCards() {
   for (const who of ["me", "him"]) {
     const c = data[who], card = $(`#card-${who}`), top = c.top;
@@ -439,7 +487,9 @@ function updateCards() {
       const want = `https://i.ytimg.com/vi/${top.id}/oardefault.jpg`;
       if (img.dataset.id !== top.id) {
         img.dataset.id = top.id;
-        img.onerror = () => { img.onerror = null; img.src = `https://i.ytimg.com/vi/${top.id}/hqdefault.jpg`; };
+        const fb = `https://i.ytimg.com/vi/${top.id}/hqdefault.jpg`;
+        img.onerror = () => { img.onerror = null; img.src = fb; };
+        img.onload = () => { if (img.naturalWidth <= 120 && img.src !== fb) img.src = fb; };
         img.src = want;
       }
       img.alt = top.title;
@@ -548,6 +598,7 @@ async function load(first) {
   updateStage(true);
   updateRows();
   updateCards();
+  buildWall();
   drawChart();
 }
 
@@ -556,6 +607,7 @@ setInterval(() => load(false), 5 * 60 * 1000);
 
 // scroll reveals
 if (!reduce) {
+  gsap.fromTo("#wall-inner", { rotateX: 32, rotateZ: -12, scale: 0.9 }, { rotateX: 8, rotateZ: -4, scale: 1.05, ease: "none", scrollTrigger: { trigger: "#wall", start: "top bottom", end: "bottom top", scrub: true } });
   gsap.utils.toArray(".row").forEach((r, i) => gsap.from(r, { y: 40, opacity: 0, duration: 0.9, delay: i * 0.08, ease: "power3.out", scrollTrigger: { trigger: r, start: "top 90%" } }));
   gsap.from(".card", { y: 80, rotateX: 25, opacity: 0, duration: 1.1, stagger: 0.12, ease: "power3.out", scrollTrigger: { trigger: ".tops", start: "top 85%" } });
   ScrollTrigger.create({ trigger: ".race", start: "top 80%", once: true, onEnter: drawChart });
