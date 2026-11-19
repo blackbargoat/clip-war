@@ -4,7 +4,7 @@ import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
 const gsap = window.gsap;
 gsap.registerPlugin(window.ScrollTrigger);
 
-const COLORS = { me: 0xff7433, him: 0x8fb8de };
+const COLORS = { me: 0xf26722, him: 0x8fcae6 };
 const CSSC = { me: "var(--me)", him: "var(--him)" };
 const STATS = ["views", "subs", "top"];
 const ICON = { views: "#i-eye", subs: "#i-user", top: "#i-play" };
@@ -34,7 +34,7 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x070605);
+scene.background = new THREE.Color(0x09090a);
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 scene.environmentIntensity = 0.5;
@@ -157,7 +157,7 @@ function makeToken(who) {
   const disc = new THREE.Mesh(new THREE.CircleGeometry(0.52, 64), discMat);
   disc.position.z = 0.072; face.add(disc);
   const disc2 = disc.clone(); disc2.rotation.y = Math.PI; disc2.position.z = -0.072; face.add(disc2);
-  const rim = new THREE.Mesh(new THREE.TorusGeometry(0.565, 0.045, 16, 96), new THREE.MeshStandardMaterial({ color: 0xe2b04a, metalness: 1, roughness: 0.25 }));
+  const rim = new THREE.Mesh(new THREE.TorusGeometry(0.565, 0.045, 16, 96), new THREE.MeshStandardMaterial({ color: 0xf1f1f3, metalness: 1, roughness: 0.18 }));
   rim.scale.z = 2.2; face.add(rim);
   arena.add(g);
   const lineMat = new THREE.ShaderMaterial({
@@ -459,7 +459,7 @@ function updateRows() {
     const cm = $(".crownmark", row);
     gsap.to(cm, { left: L === "me" ? "0%" : L === "him" ? "100%" : "50%", opacity: L ? 1 : 0.25, duration: 1.2, ease: "back.out(1.6)" });
     const pb = document.querySelector(`.pick button[data-stat="${s}"] .cr`);
-    pb.style.setProperty("--c", L ? CSSC[L] : "var(--line)");
+    pb.style.setProperty("--c", L ? CSSC[L] : "rgba(255,255,255,.12)");
   });
 }
 
@@ -568,7 +568,7 @@ function drawChart() {
     <g class="grid">${[0.25, 0.5, 0.75, 1].map((f) => `<line x1="${padL}" x2="${W - padR}" y1="${Y(max * f / 1.12)}" y2="${Y(max * f / 1.12)}"/>`).join("")}
       <line x1="${padL}" x2="${W - padR}" y1="${Y(0)}" y2="${Y(0)}"/></g>
     ${ticks.map((d) => `<text class="ax" x="${X(d)}" y="${H - 6}" text-anchor="middle">${d.getMonth() + 1}.${d.getDate()}</text>`).join("")}
-    <g transform="translate(${X(t1) - 2},${Y(0) - 30})" style="color:var(--gold)"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-gift"/></svg></g>
+    <g transform="translate(${X(t1) - 2},${Y(0) - 30})" style="color:var(--ink)"><svg width="26" height="26" viewBox="0 0 24 24"><use href="#i-gift"/></svg></g>
     <path d="${him.area}" fill="var(--him)" opacity=".08"/>
     <path d="${me.area}" fill="var(--me)" opacity=".1"/>
     <path class="ln" d="${him.d}" fill="none" stroke="var(--him)" stroke-width="3.5" stroke-linecap="round"/>
@@ -636,4 +636,13 @@ if (!reduce) {
   gsap.utils.toArray(".row").forEach((r, i) => gsap.from(r, { y: 40, opacity: 0, duration: 0.9, delay: i * 0.08, ease: "power3.out", scrollTrigger: { trigger: r, start: "top 90%" } }));
   gsap.from(".card", { y: 80, rotateX: 25, opacity: 0, duration: 1.1, stagger: 0.12, ease: "power3.out", scrollTrigger: { trigger: ".tops", start: "top 85%" } });
   ScrollTrigger.create({ trigger: ".race", start: "top 80%", once: true, onEnter: drawChart });
+  // the globe sinks back and dims as you scroll so the glass panels float over it
+  gsap.to("#gl", { opacity: 0.45, ease: "none", scrollTrigger: { trigger: ".stage", start: "top top", end: "bottom top", scrub: true } });
+  gsap.from(".digits > div", { y: 60, rotateX: -35, opacity: 0, duration: 1.1, stagger: 0.08, ease: "power3.out", scrollTrigger: { trigger: ".clock", start: "top 85%" } });
+  gsap.from(".race .pane", { y: 60, rotateX: 18, opacity: 0, duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: ".race", start: "top 85%" } });
+  // glass slabs lean toward the pointer
+  addEventListener("pointermove", (e) => {
+    const x = e.clientX / innerWidth - 0.5, y = e.clientY / innerHeight - 0.5;
+    gsap.to(".digits", { rotateY: x * 10, rotateX: -y * 8, duration: 0.8, ease: "power2.out", overwrite: "auto" });
+  });
 }

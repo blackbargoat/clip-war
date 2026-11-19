@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Clip War</title>
 <meta name="description" content="StolenFromStream vs Grand Theft Clips. Race to Christmas.">
-<meta name="theme-color" content="#0e0c0a">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M8 48 L12 18 L24 32 L32 12 L40 32 L52 18 L56 48 Z' fill='%23e8b448'/></svg>">
+<meta name="theme-color" content="#09090a">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M8 48 L12 18 L24 32 L32 12 L40 32 L52 18 L56 48 Z' fill='%235b2fd6'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=1795060291">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=1795095579">
 <script type="importmap">
 { "imports": {
   "three": "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js",
@@ -34,11 +34,11 @@
 </svg>
 
 <header class="top">
-  <div class="count" aria-label="Time left until Christmas">
+  <div class="count lg" aria-label="Time left until Christmas">
     <svg class="ic"><use href="#i-gift"/></svg>
     <span id="cd">--</span>
   </div>
-  <div class="fresh" id="fresh"><i></i><span>--</span></div>
+  <div class="fresh lg" id="fresh"><i></i><span>--</span></div>
 </header>
 
 <section class="stage" id="stage">
@@ -46,45 +46,45 @@
   <div class="tag me" id="tag-me">
     <img class="pfp" id="pfp-me" alt="">
     <div class="big" id="n-me">0</div>
-    <div class="who" id="name-me"></div>
+    <div class="who lg" id="name-me"></div>
   </div>
   <div class="tag him" id="tag-him">
     <img class="pfp" id="pfp-him" alt="">
     <div class="big" id="n-him">0</div>
-    <div class="who" id="name-him"></div>
+    <div class="who lg" id="name-him"></div>
   </div>
-  <div class="gap" id="gap"><span id="gap-n">0</span></div>
-  <nav class="pick" id="pick">
+  <div class="gap lg" id="gap"><i></i><span id="gap-n">0</span></div>
+  <nav class="pick lg" id="pick">
     <button data-stat="views" class="on" aria-label="Total views"><svg><use href="#i-eye"/></svg><b class="cr"><svg><use href="#i-crown"/></svg></b></button>
     <button data-stat="subs" aria-label="Subscribers"><svg><use href="#i-user"/></svg><b class="cr"><svg><use href="#i-crown"/></svg></b></button>
     <button data-stat="top" aria-label="Most viewed video"><svg><use href="#i-play"/></svg><b class="cr"><svg><use href="#i-crown"/></svg></b></button>
   </nav>
 </section>
 
-<section class="clock" aria-label="Countdown to Christmas">
+<section class="clock after" aria-label="Countdown to Christmas">
   <div class="digits">
-    <div><b id="cd-d">00</b><i>D</i></div><span>:</span>
-    <div><b id="cd-h">00</b><i>H</i></div><span>:</span>
-    <div><b id="cd-m">00</b><i>M</i></div><span>:</span>
-    <div><b id="cd-s">00</b><i>S</i></div>
+    <div class="lg"><b id="cd-d">00</b><i>D</i></div><span>:</span>
+    <div class="lg"><b id="cd-h">00</b><i>H</i></div><span>:</span>
+    <div class="lg"><b id="cd-m">00</b><i>M</i></div><span>:</span>
+    <div class="lg"><b id="cd-s">00</b><i>S</i></div>
   </div>
-  <div class="track"><i id="track-fill"></i><svg class="flake" id="flake" viewBox="0 0 24 24"><use href="#i-flake"/></svg><svg class="ic end"><use href="#i-gift"/></svg></div>
+  <div class="track lg"><i id="track-fill"></i><svg class="flake" id="flake" viewBox="0 0 24 24"><use href="#i-flake"/></svg><svg class="ic end"><use href="#i-gift"/></svg></div>
 </section>
 
-<section class="crowns" id="crowns">
-  <div class="row" data-stat="views">
+<section class="crowns after" id="crowns">
+  <div class="row lg" data-stat="views">
     <svg class="ic lead"><use href="#i-eye"/></svg>
     <div class="side me"><span class="v">0</span></div>
     <div class="bar"><i class="me"></i><i class="him"></i><b class="crownmark"><svg><use href="#i-crown"/></svg></b></div>
     <div class="side him"><span class="v">0</span></div>
   </div>
-  <div class="row" data-stat="subs">
+  <div class="row lg" data-stat="subs">
     <svg class="ic lead"><use href="#i-user"/></svg>
     <div class="side me"><span class="v">0</span></div>
     <div class="bar"><i class="me"></i><i class="him"></i><b class="crownmark"><svg><use href="#i-crown"/></svg></b></div>
     <div class="side him"><span class="v">0</span></div>
   </div>
-  <div class="row" data-stat="top">
+  <div class="row lg" data-stat="top">
     <svg class="ic lead"><use href="#i-play"/></svg>
     <div class="side me"><span class="v">0</span></div>
     <div class="bar"><i class="me"></i><i class="him"></i><b class="crownmark"><svg><use href="#i-crown"/></svg></b></div>
@@ -92,20 +92,20 @@
   </div>
 </section>
 
-<section class="race">
+<section class="race after"><div class="pane lg">
   <svg class="ic head"><use href="#i-eye"/></svg>
   <div class="chart" id="chart"></div>
-</section>
+</div></section>
 
-<section class="tops">
-  <a class="card me" id="card-me" target="_blank" rel="noopener">
+<section class="tops after">
+  <a class="card lg me" id="card-me" target="_blank" rel="noopener">
     <div class="thumb"><img alt=""><div class="empty"><svg><use href="#i-play"/></svg></div></div>
     <b class="crownmark"><svg><use href="#i-crown"/></svg></b>
     <div class="meta"><svg class="ic"><use href="#i-eye"/></svg><span class="v">0</span></div>
     <div class="meta dim"><svg class="ic"><use href="#i-film"/></svg><span class="c">0</span></div>
   </a>
   <div class="vs">VS</div>
-  <a class="card him" id="card-him" target="_blank" rel="noopener">
+  <a class="card lg him" id="card-him" target="_blank" rel="noopener">
     <div class="thumb"><img alt=""><div class="empty"><svg><use href="#i-play"/></svg></div></div>
     <b class="crownmark"><svg><use href="#i-crown"/></svg></b>
     <div class="meta"><svg class="ic"><use href="#i-eye"/></svg><span class="v">0</span></div>
@@ -113,16 +113,16 @@
   </a>
 </section>
 
-<section class="wall" id="wall">
+<section class="wall after" id="wall">
   <div class="wall-inner" id="wall-inner"></div>
 </section>
 
-<footer class="foot">
+<footer class="foot after"><div class="pill lg">
   <a id="yt-me" target="_blank" rel="noopener"><img id="f-me" alt=""></a>
   <span>12.25</span>
   <a id="yt-him" target="_blank" rel="noopener"><img id="f-him" alt=""></a>
-</footer>
+</div></footer>
 
-<script type="module" src="main.js?v=1795060291"></script>
+<script type="module" src="main.js?v=1795095579"></script>
 </body>
 </html>
