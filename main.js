@@ -102,7 +102,7 @@ const earthMat = new THREE.ShaderMaterial({
       // sun glint on water (water = dark and blue-leaning in Blue Marble)
       float water = smoothstep(0.02, 0.0, d.r - d.b + 0.02) * (1.0 - smoothstep(0.12, 0.3, dot(d, vec3(0.33))));
       vec3 H = normalize(sun + V);
-      col += vec3(1.0, 0.92, 0.8) * pow(max(dot(N, H), 0.0), 90.0) * 0.28 * water * lit;
+      col += vec3(1.0, 0.92, 0.8) * pow(max(dot(N, H), 0.0), 90.0) * 0.28 * water * smoothstep(0.05, 0.3, ndl);
       // thin sunlit atmosphere at the edge
       float rim = pow(1.0 - max(dot(N, V), 0.0), 3.0);
       col += vec3(0.42, 0.62, 0.9) * rim * 0.32 * smoothstep(-0.2, 0.5, ndl);
@@ -162,10 +162,10 @@ function makeToken(who) {
   arena.add(g);
   const lineMat = new THREE.ShaderMaterial({
     transparent: true, depthWrite: false,
-    uniforms: { t: { value: 0 }, c: { value: new THREE.Color(col) } },
+    uniforms: { t: { value: 0 }, o: { value: 1 }, c: { value: new THREE.Color(col) } },
     vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }",
-    fragmentShader: `uniform float t; uniform vec3 c; varying vec2 vUv;
-      void main(){ float on = step(0.4, fract(vUv.x * 18.0 - t)); float a = on * smoothstep(0.0, 0.05, vUv.x);
+    fragmentShader: `uniform float t; uniform float o; uniform vec3 c; varying vec2 vUv;
+      void main(){ float on = step(0.4, fract(vUv.x * 18.0 - t)); float a = on * smoothstep(0.0, 0.05, vUv.x) * o;
         if (a < 0.01) discard; gl_FragColor = vec4(c, a * 0.95); }`,
   });
   const line = new THREE.Mesh(new THREE.BufferGeometry(), lineMat);
@@ -382,6 +382,11 @@ function frame() {
     p.line.geometry.dispose();
     p.line.geometry = new THREE.TubeGeometry(curve, 64, 0.022, 6, false);
     p.lineMat.uniforms.t.value = t * 0.8;
+    // fade the line out while the city is turned away from the camera
+    const facing = nv.dot(wv.copy(camera.position).sub(city).normalize());
+    const o = THREE.MathUtils.smoothstep(facing, 0.12, 0.4);
+    p.lineMat.uniforms.o.value = o;
+    p.line.visible = o > 0.01;
   }
   for (const s of STATS) {
     const c = crowns[s];
