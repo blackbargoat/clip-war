@@ -1,15 +1,15 @@
 {
- "updated": "2026-11-22T01:25:20.771Z",
+ "updated": "2026-11-22T08:43:02.984Z",
  "me": {
   "id": "UCpP09symXfvPDQUMd0pv37w",
   "name": "StolenFromStream",
   "handle": "@StolenFromStream",
   "avatarUrl": "https://yt3.googleusercontent.com/D086DqrTTy4p7szAikIWOu56SeJTi2qKSniaBgFQSCJgO657pkQfF2tWH4bIDrxsnAJNmwsWuw=s900-c-k-c0x00ffffff-no-rj",
-  "subs": 2,
-  "subsText": "2 subscribers",
+  "subs": 1,
+  "subsText": "1 subscriber",
   "views": 1320,
-  "aboutViews": 1320,
-  "videoCount": 3,
+  "aboutViews": 1319,
+  "videoCount": 4,
   "exactCoverage": 0,
   "top": {
    "id": "BIb4QUmITH8",
@@ -35,6 +35,12 @@
     "title": "IShowSpeed Gives A Homeless NPC Money And Gets Robbed 😭 #shorts",
     "views": 2,
     "published": "2026-11-20T00:02:00+00:00"
+   },
+   {
+    "id": "V_P8A2Vnalk",
+    "title": "Speed almost died to an alligator in GTA 6 💀 #shorts",
+    "views": 0,
+    "published": "2026-11-22T04:36:51+00:00"
    }
   ]
  },
@@ -43,23 +49,23 @@
   "name": "Grand Theft Clips",
   "handle": "@GTAFacts_Clips",
   "avatarUrl": "https://yt3.googleusercontent.com/7AMlmugfBPkDKI_vcAwXvsRxGrk-a50nDnjb0tMGlVkTEE2tNNEQXgiRzIzqCSQe81FaMJFl=s900-c-k-c0x00ffffff-no-rj",
-  "subs": 18,
-  "subsText": "18 subscribers",
-  "views": 56636,
+  "subs": 19,
+  "subsText": "19 subscribers",
+  "views": 59655,
   "aboutViews": 33976,
   "videoCount": 46,
   "exactCoverage": 0,
   "top": {
    "id": "j7airmYXoAQ",
    "title": "Speed swears this GTA 6 dog is his 😭",
-   "views": 19393,
+   "views": 20059,
    "published": "2026-11-20T22:00:24+00:00"
   },
   "videos": [
    {
     "id": "j7airmYXoAQ",
     "title": "Speed swears this GTA 6 dog is his 😭",
-    "views": 19393,
+    "views": 20059,
     "published": "2026-11-20T22:00:24+00:00"
    },
    {
@@ -93,16 +99,22 @@
     "published": "2026-11-16T16:45:28-08:00"
    },
    {
+    "id": "FmJEux3gTvA",
+    "title": "GTA 6 on Xbox Series S vs PS5 Pro 👀",
+    "views": 1445,
+    "published": "2026-11-19T11:00:11+00:00"
+   },
+   {
     "id": "EaIjZSaaBBo",
     "title": "GTA Almost Made You Play as the COPS 🚓 #gaming #gta6 #gta5 #rockstargames",
     "views": 1445,
     "published": "2026-11-18T00:54:05+00:00"
    },
    {
-    "id": "FmJEux3gTvA",
-    "title": "GTA 6 on Xbox Series S vs PS5 Pro 👀",
-    "views": 1443,
-    "published": "2026-11-19T11:00:11+00:00"
+    "id": "vao9GYOHpJY",
+    "title": "This GTA 6 NPC didn't wash his hands 🤢",
+    "views": 1407,
+    "published": "2026-11-22T01:00:31+00:00"
    },
    {
     "id": "-3UxWjg2-V4",
@@ -137,7 +149,7 @@
    {
     "id": "TK37NpI6a6c",
     "title": "GTA 6 has piranhas 😳",
-    "views": 1279,
+    "views": 1281,
     "published": "2026-11-19T14:00:34+00:00"
    },
    {
@@ -159,16 +171,16 @@
     "published": "2026-11-17T03:45:38+00:00"
    },
    {
+    "id": "jHNcnp9Zrfs",
+    "title": "Grandma robbed Squeex in GTA 6 😭",
+    "views": 1189,
+    "published": "2026-11-21T22:00:20+00:00"
+   },
+   {
     "id": "kjGbcSwXfNg",
     "title": "Rockstar Made a REAL Website for a Fake Cult 💀 #gaming #rockstargames #gta5",
     "views": 1165,
     "published": "2026-11-18T10:00:02+00:00"
-   },
-   {
-    "id": "jHNcnp9Zrfs",
-    "title": "Grandma robbed Squeex in GTA 6 😭",
-    "views": 1143,
-    "published": "2026-11-21T22:00:20+00:00"
    },
    {
     "id": "O_CmixQUYw4",
@@ -195,6 +207,12 @@
     "published": "2026-11-18T04:00:25+00:00"
    },
    {
+    "id": "gvVf5tH4jVY",
+    "title": "Never take a shortcut in GTA 6 😭",
+    "views": 1070,
+    "published": "2026-11-21T19:00:07+00:00"
+   },
+   {
     "id": "vq22yARulS0",
     "title": "GTA 5 Outsold the Best-Selling Console EVER 😳 #rockstargames #gaming #gta5",
     "views": 1012,
@@ -207,9 +225,15 @@
     "published": "2026-11-19T17:00:20+00:00"
    },
    {
+    "id": "4c7rEi1KtXg",
+    "title": "Speed tried to hug Red Hulk in GTA 6 💀",
+    "views": 808,
+    "published": "2026-11-21T16:00:21+00:00"
+   },
+   {
     "id": "UOmepSJCNWU",
     "title": "Loserfruit touched the wrong tree in GTA 6 😳",
-    "views": 626,
+    "views": 627,
     "published": "2026-11-19T08:00:33+00:00"
    },
    {
@@ -219,16 +243,16 @@
     "published": "2026-11-15T12:36:23-08:00"
    },
    {
-    "id": "gvVf5tH4jVY",
-    "title": "Never take a shortcut in GTA 6 😭",
-    "views": 500,
-    "published": "2026-11-21T19:00:07+00:00"
-   },
-   {
     "id": "J0CHf7j5jZE",
     "title": "GTA 6 has sharks 🦈",
     "views": 477,
     "published": "2026-11-19T01:35:49+00:00"
+   },
+   {
+    "id": "zs3KdQjX8w0",
+    "title": "\"It's the first day!\" GTA 6 cops didn't care 😭",
+    "views": 457,
+    "published": "2026-11-21T01:00:02+00:00"
    },
    {
     "id": "7fRKSbxHjUw",
@@ -237,28 +261,10 @@
     "published": "2026-11-18T17:00:07+00:00"
    },
    {
-    "id": "zs3KdQjX8w0",
-    "title": "\"It's the first day!\" GTA 6 cops didn't care 😭",
-    "views": 379,
-    "published": "2026-11-21T01:00:02+00:00"
-   },
-   {
-    "id": "4c7rEi1KtXg",
-    "title": "Speed tried to hug Red Hulk in GTA 6 💀",
-    "views": 346,
-    "published": "2026-11-21T16:00:21+00:00"
-   },
-   {
     "id": "FKyCPsIlhzU",
     "title": "GTA 6’s Map Is Real Florida 🌴 Here’s Where #gta6",
     "views": 238,
     "published": "2026-11-15T12:16:41-08:00"
-   },
-   {
-    "id": "vao9GYOHpJY",
-    "title": "This GTA 6 NPC didn't wash his hands 🤢",
-    "views": 215,
-    "published": "2026-11-22T01:00:31+00:00"
    },
    {
     "id": "tPPUDl7JPPo",
