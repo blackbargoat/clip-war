@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T20:23:14.234Z",
+ "updated": "2026-11-25T03:41:15.590Z",
  "me": {
   "id": "UCpP09symXfvPDQUMd0pv37w",
   "name": "StolenFromStream",
@@ -7,7 +7,7 @@
   "avatarUrl": "https://yt3.googleusercontent.com/D086DqrTTy4p7szAikIWOu56SeJTi2qKSniaBgFQSCJgO657pkQfF2tWH4bIDrxsnAJNmwsWuw=s900-c-k-c0x00ffffff-no-rj",
   "subs": 1,
   "subsText": "1 subscriber",
-  "views": 1335,
+  "views": 1340,
   "aboutViews": 1330,
   "videoCount": 8,
   "exactCoverage": 0,
@@ -33,8 +33,14 @@
    {
     "id": "2XVCSq-cZco",
     "title": "Joe Bart 1v4'd a whole bar in GTA 6 💀 #shorts",
-    "views": 15,
+    "views": 18,
     "published": "2026-11-23T12:02:52+00:00"
+   },
+   {
+    "id": "t1TyQ0rSU2o",
+    "title": "Joe Bart just kept driving in GTA 6 😭 #shorts",
+    "views": 2,
+    "published": "2026-11-24T12:03:45+00:00"
    },
    {
     "id": "kNej1Km4HjY",
@@ -55,12 +61,6 @@
     "published": "2026-11-22T12:01:17+00:00"
    },
    {
-    "id": "t1TyQ0rSU2o",
-    "title": "Joe Bart just kept driving in GTA 6 😭 #shorts",
-    "views": 0,
-    "published": "2026-11-24T12:03:45+00:00"
-   },
-   {
     "id": "V_P8A2Vnalk",
     "title": "Speed almost died to an alligator in GTA 6 💀 #shorts",
     "views": 0,
@@ -75,21 +75,21 @@
   "avatarUrl": "https://yt3.googleusercontent.com/7AMlmugfBPkDKI_vcAwXvsRxGrk-a50nDnjb0tMGlVkTEE2tNNEQXgiRzIzqCSQe81FaMJFl=s900-c-k-c0x00ffffff-no-rj",
   "subs": 27,
   "subsText": "27 subscribers",
-  "views": 100527,
+  "views": 101475,
   "aboutViews": 99842,
-  "videoCount": 54,
+  "videoCount": 56,
   "exactCoverage": 0,
   "top": {
    "id": "zXZsnHJKmXo",
    "title": "Squeex freed a killer whale in GTA 6 🐋",
-   "views": 29668,
+   "views": 29768,
    "published": "2026-11-22T19:00:14+00:00"
   },
   "videos": [
    {
     "id": "zXZsnHJKmXo",
     "title": "Squeex freed a killer whale in GTA 6 🐋",
-    "views": 29668,
+    "views": 29768,
     "published": "2026-11-22T19:00:14+00:00"
    },
    {
@@ -101,7 +101,7 @@
    {
     "id": "reUxcRHBaX4",
     "title": "There was a gator in the pool in GTA 6 🐊",
-    "views": 4257,
+    "views": 5088,
     "published": "2026-11-23T16:00:03+00:00"
    },
    {
@@ -167,7 +167,7 @@
    {
     "id": "4c7rEi1KtXg",
     "title": "Speed tried to hug Red Hulk in GTA 6 💀",
-    "views": 1420,
+    "views": 1422,
     "published": "2026-11-21T16:00:21+00:00"
    },
    {
@@ -183,16 +183,16 @@
     "published": "2026-11-15T12:28:51-08:00"
    },
    {
+    "id": "GXzir2rjZPk",
+    "title": "CaseOh got caught by the GTA 6 cops 💀 (part 2)",
+    "views": 1360,
+    "published": "2026-11-23T01:00:12+00:00"
+   },
+   {
     "id": "gvVf5tH4jVY",
     "title": "Never take a shortcut in GTA 6 😭",
     "views": 1350,
     "published": "2026-11-21T19:00:07+00:00"
-   },
-   {
-    "id": "GXzir2rjZPk",
-    "title": "CaseOh got caught by the GTA 6 cops 💀 (part 2)",
-    "views": 1349,
-    "published": "2026-11-23T01:00:12+00:00"
    },
    {
     "id": "KUxk8jhYhjM",
@@ -269,7 +269,7 @@
    {
     "id": "2hdAJEIvesw",
     "title": "CaseOh tried a backflip in GTA 6 💀",
-    "views": 1054,
+    "views": 1055,
     "published": "2026-11-23T22:00:23+00:00"
    },
    {
@@ -293,7 +293,7 @@
    {
     "id": "zs3KdQjX8w0",
     "title": "\"It's the first day!\" GTA 6 cops didn't care 😭",
-    "views": 632,
+    "views": 633,
     "published": "2026-11-21T01:00:02+00:00"
    },
    {
@@ -393,16 +393,28 @@
     "published": "2026-11-15T12:44:26-08:00"
    },
    {
+    "id": "sTXaGD7Xw1g",
+    "title": "Speed's first 30 seconds of GTA 6 😭 #gta6 #gtavi",
+    "views": 2,
+    "published": "2026-11-24T06:09:39+00:00"
+   },
+   {
     "id": "MpBMzdxPqCg",
     "title": "Can you play GTA6?  🤯#gtavi #rockstargames #vicecity #gaming #leonida #grandtheftauto  #gta #gta5",
     "views": 2,
     "published": "2026-11-15T12:58:09-08:00"
    },
    {
-    "id": "sTXaGD7Xw1g",
-    "title": "Speed's first 30 seconds of GTA 6 😭 #gta6 #gtavi",
+    "id": "CP6m2PCSduA",
+    "title": "Speed's first police chase in GTA 6 🚔",
     "views": 1,
-    "published": "2026-11-24T06:09:39+00:00"
+    "published": "2026-11-24T22:07:00+00:00"
+   },
+   {
+    "id": "HV35RTTIfNs",
+    "title": "Joe Bartolozzi vs a gator in GTA 6 🐊 #gta6 #gtavi #gtavicecity #gtavice #gtamemes",
+    "views": 0,
+    "published": "2026-11-25T00:15:03+00:00"
    },
    {
     "id": "V1vRPMAGRuc",
